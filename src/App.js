@@ -47,7 +47,8 @@ class App extends Component {
             officeanswer: false,
             mistake: "",
             choosePercent: true,
-            meeting1: false,
+            currentMeeting: 1,
+            meeting1: true,
             meeting2: false,
             meeting3: false,
         };
@@ -59,8 +60,7 @@ class App extends Component {
         this.hideOffice = this.hideOffice.bind(this);
         this.changingOffices = this.changingOffices.bind(this);
         this.showOfficeanswers = this.showOfficeanswers.bind(this);
-        this.showMeeting = this.showMeeting.bind(this);
-        this.hideMeeting = this.hideMeeting.bind(this);
+        this.updateMeet = this.updateMeet.bind(this);
 
     }
 
@@ -83,11 +83,6 @@ class App extends Component {
         if (this.state.game === 2) {
             addResponseMessage('Can you help me with this pitch deck right now');
             toggleWidget();
-        }
-        if (this.state.game === 4) {
-            meet1 = setInterval(this.showMeeting.bind(null, 1), 2000);
-            meet2 = setInterval(this.showMeeting.bind(null, 2), 7000);
-            meet3 = setInterval(this.showMeeting.bind(null, 3), 10000);
         }
         this.setState({ game: this.state.game + 1});
     }
@@ -187,34 +182,17 @@ class App extends Component {
         }
     }
 
-    showMeeting(num) {
-        switch (num) {
-            case 1:
-                this.setState({ meeting1: true});
-                setTimeout(this.hideMeeting.bind(null, num), 4000);
-                break;
-            case 2:
-                this.setState({ meeting2: true});
-                setTimeout(this.hideMeeting.bind(null, num), 4000);
-                break;
-            case 3:
-                this.setState({ meeting3: true});
-                setTimeout(this.hideMeeting.bind(null, num), 4000);
-                break;
-                this.setState({ meeting3: this.state.meeting3});
-        }
-    }
-
-    hideMeeting(num) {
-        switch (num) {
+    updateMeet() {
+        switch (this.state.currentMeeting) {
             case 1:
                 this.setState({ meeting1: false});
+                this.setState({ meeting2: true});
+                this.setState({ currentMeeting: this.state.currentMeeting + 1});
                 break;
             case 2:
                 this.setState({ meeting2: false});
-                break;
-            case 3:
-                this.setState({ meeting3: false});
+                this.setState({ meeting3: true});
+                this.setState({ currentMeeting: this.state.currentMeeting + 1});
                 break;
             default:
                 this.setState({ meeting3: this.state.meeting3});
@@ -340,6 +318,10 @@ class App extends Component {
                             {this.state.meeting1 ? <div><img src={speech1} alt="speech1" width="200" style={{position:'absolute', top:'50px', left:'560px'}}></img><h3 style={{position:'absolute', top:'50px', left:'560px'}}>Did you finish the project?</h3></div> : null}
                             {this.state.meeting2 ? <div><img src={speech1} alt="speech1" width="200" style={{position:'absolute', top:'50px', left:'830px'}}></img><h3 style={{position:'absolute', top:'50px', left:'830px'}}>Did you complete you goals for the week?</h3></div> : null}
                             {this.state.meeting3 ? <div><img src={speech2} alt="speech2" width="200" height="100" style={{position:'absolute', top:'120px', left:'860px'}}></img><h3 style={{position:'absolute', top:'120px', left:'860px'}}>Who do you think works the hardest in the office?</h3></div> : null}
+                            <button onClick={() => this.updateMeet()}>Yes</button>
+                            <button onClick={() => this.updateMeet()}>No</button>
+                            <button onClick={() => this.updateMeet()}>John</button>
+                            <button onClick={() => this.updateMeet()}>Great</button>
                         </div>
                         <button onClick={() => this.next()}>
                             Start3
