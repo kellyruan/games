@@ -1,23 +1,13 @@
 import React, { Component } from 'react';
+import Modal from 'react-modal';
+import { css } from "@emotion/core";
+import ClockLoader from "react-spinners/ClockLoader";
 import './App.css';
-import office from './office.jpg';
-import office2 from './office2.PNG';
-import office3 from './office3.PNG';
-import office4 from './office4.PNG';
-import office5 from './office5.PNG';
-import office6 from './office6.PNG';
-import office7 from './office7.PNG';
-import office8 from './office8.PNG';
-import office9 from './office9.PNG';
-import meeting from './meeting.jpg';
-import speech1 from './speech1.png';
-import speech2 from './speech2.png';
-import numberss from './numberss.jpg';
-import workspace from './workspace.jpg';
+import office from './office.jpeg';
+import meeting from './meeting.png';
+//import numberss from './numberss.jpg';
+import workspace from './workspace.jpeg';
 import group from './group.jpg';
-import {Widget, addResponseMessage, addUserMessage, toggleWidget} from 'react-chat-widget';
-import 'react-chat-widget/lib/styles.css';
-
 var num;
 var off;
 var off1;
@@ -28,6 +18,29 @@ var meet1;
 var meet2;
 var meet3;
 
+const startmodal = {
+  content : {
+    top                   : '50%',
+    left                  : '48%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)',
+    width : '250px'
+  }
+};
+
+const endmodal = {
+  content : {
+    top                   : '50%',
+    left                  : '48%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)',
+    width : '250px'
+  }
+};
 
 class App extends Component {
     constructor(props) {
@@ -35,56 +48,129 @@ class App extends Component {
 
         this.state = {
             game: 0,
+            startmodal: false,
+            starts: ["Simulation: walk though office", "Game: click the number 2", "Simulation: write a report about your biggest mistakes", "Game: select percentages of work to give unreliable groupmates", "Simulation: meeting with managers"],
+            endmodal: false,
+            ends: ["Simulation Completed", "Game Completed", "Simulation Completed", "Game Completed", "Simulations Completed"],
+            officeleft1: false,
+            officeleft2: false,
+            officeright1: false,
+            officeright2: false,
+            officeanswer: false,
+            officespeeches: ["Good morning", "Good Morning!", "Meeting at 4pm today"],
+            currentoffice: -1,
             numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
             currentNumber: 0,
             progress: 0,
-            currentOfficeb: 0,
-            officebs: [office, office2, office3, office4, office5, office6, office7, office8, office9],
-            office1: false,
-            office2: false,
-            office3: false,
-            office4: false,
-            officeanswer: false,
             mistake: "",
+            showMistake: true,
             choosePercent: true,
-            currentMeeting: 1,
+            currentMeeting: 0,
             meeting1: true,
             meeting2: false,
             meeting3: false,
+            meeting4: true,
+            meetingQuestions: ['What time is the meeting later?', 'Did you finish the project?', 'Did you help Bob with his report?', 'Did you finish the project?'],
+            meetingAnswers: [['Yes, my teammates were awesome and really helpful', 'Yes but I did the majority of the work without their help', 'No, my teammates were extremely unhelpful and delayed our progress', 'No I did not want it and think that it is a waste of time'], ['I think Bob said it is at 2pm', 'I think Joe said it is at 4pm in the lunch room', 'I do not think there is another meeting today until tomorrow', 'I am not sure but I will ask around and get back to you'], ['Yes it went super quick with both of us working on it', 'Yes but I did the majority of the work instead of him', 'No I had to finish my own project due today and did not have spare time', 'No I think my project is more important than his so I worked on my own'], ['Yes, my teammates were awesome and really helpful', 'Yes but I did the majority of the work without their help', 'No, my teammates were extremely unhelpful and delayed our progress', 'No I did not want it and think that it is a waste of time']],
         };
 
         this.next = this.next.bind(this);
+        this.closeModal = this.closeModal.bind(this);
         this.changingNumbers = this.changingNumbers.bind(this);
         this.stopChangingNumbers = this.stopChangingNumbers.bind(this);
+        this.showOfficeanswers = this.showOfficeanswers.bind(this);
+        this.showMeet = this.showMeet.bind(this);
+        this.updateMeet = this.updateMeet.bind(this);
         this.showOffice = this.showOffice.bind(this);
         this.hideOffice = this.hideOffice.bind(this);
-        this.changingOffices = this.changingOffices.bind(this);
-        this.showOfficeanswers = this.showOfficeanswers.bind(this);
-        this.updateMeet = this.updateMeet.bind(this);
+        this.updateProgress = this.updateProgress.bind(this);
+        this.showProgress = this.showProgress.bind(this);
+        this.black = this.black.bind(this);
+        this.light = this.light.bind(this);
+        this.endOffice = this.endOffice.bind(this);
+        this.endNumbers = this.endNumbers.bind(this);
+        this.endwriting = this.endwriting.bind(this);
 
     }
 
-    componentDidMount() {
+    closeModal() {
+        this.setState({ startmodal: false});
+        this.setState({ endmodal: false});
+        if (this.state.game === 1) {
+            setTimeout(this.showOffice.bind(null, 'right1'), 2500);
+            setTimeout(this.showOffice.bind(null, 'left1'), 6000);
+            setTimeout(this.showOffice.bind(null, 'left2'), 12000);
+            setTimeout(this.endOffice, 16000);
+            //setTimeout(this.showOfficeanswers.bind(null, num), 17000);
+        }
+        if (this.state.game === 2) {
+            num = setInterval(this.changingNumbers, 50);
+            setInterval(this.stopChangingNumbers, 10000);
+        }
+        if (this.state.game === 3) {
+            setTimeout(this.black, 6000);
+            setTimeout(this.endwriting, 12000);
+        }
+        if (this.state.game === 4) {
+            setTimeout(this.endwriting, 12000);
+        }
     }
 
     next() {
-        if (this.state.game === 0) {
-            off = setInterval(this.changingOffices, 1000);
-            off1 = setInterval(this.showOffice.bind(null, 1), 2000);
-            off2 = setInterval(this.showOffice.bind(null, 2), 7000);
-            off3 = setInterval(this.showOffice.bind(null, 3), 10000);
-            off4 = setInterval(this.showOffice.bind(null, 4), 12000);
-            setTimeout(this.showOfficeanswers.bind(null, num), 17000);
-        }
-        if (this.state.game === 1) {
-            num = setInterval(this.changingNumbers, 100);
-            setInterval(this.stopChangingNumbers, 7000);
-        }
-        if (this.state.game === 2) {
-            addResponseMessage('Can you help me with this pitch deck right now');
-            toggleWidget();
-        }
+        this.setState({ startmodal: true});
+        this.setState({ endmodal: false});
         this.setState({ game: this.state.game + 1});
+    }
+
+    endOffice() {
+        this.setState({ endmodal: true});
+    }
+
+    showOffice(type) {
+        switch (type) {
+            case 'left1':
+                this.setState({ officeleft1: true});
+                this.setState({ currentoffice: this.state.currentoffice + 1});
+                setTimeout(this.hideOffice.bind(null, type), 1500);
+                break;
+            case 'left2':
+                this.setState({ officeleft2: true});
+                this.setState({ currentoffice: this.state.currentoffice + 1});
+                setTimeout(this.hideOffice.bind(null, type), 1500);
+                break;
+            case 'right1':
+                this.setState({ officeright1: true});
+                this.setState({ currentoffice: this.state.currentoffice + 1});
+                setTimeout(this.hideOffice.bind(null, type), 1500);
+                break;
+            case 'right2':
+                this.setState({ officeright2: true});
+                this.setState({ currentoffice: this.state.currentoffice + 1});
+                setTimeout(this.hideOffice.bind(null, type), 1500);
+                break;
+            default:
+
+        }
+
+    }
+
+    hideOffice(type) {
+        switch (type) {
+            case 'left1':
+                this.setState({ officeleft1: false});
+                break;
+            case 'left2':
+                this.setState({ officeleft2: false});
+                break;
+            case 'right1':
+                this.setState({ officeright1: false});
+                break;
+            case 'right2':
+                this.setState({ officeright2: false});
+                break;
+            default:
+
+        }
     }
 
     changingNumbers() {
@@ -98,53 +184,8 @@ class App extends Component {
         clearInterval(num)
     }
 
-    changingOffices() {
-        this.setState({ currentOfficeb: this.state.currentOfficeb + 1})
-        if (this.state.currentOfficeb >= 8) {
-            this.setState({ currentOfficeb: 0})
-        }
-    }
-
-    showOffice(num) {
-        switch (num) {
-            case 1:
-                this.setState({ office1: true});
-                setTimeout(this.hideOffice.bind(null, num), 4000);
-                break;
-            case 2:
-                this.setState({ office2: true});
-                setTimeout(this.hideOffice.bind(null, num), 4000);
-                break;
-            case 3:
-                this.setState({ office3: true});
-                setTimeout(this.hideOffice.bind(null, num), 4000);
-                break;
-            case 4:
-                this.setState({ office4: true});
-                setTimeout(this.hideOffice.bind(null, num), 4000);
-                break;
-            default:
-                this.setState({ office1: this.state.office1});
-        }
-    }
-
-    hideOffice(num) {
-        switch (num) {
-            case 1:
-                this.setState({ office1: false});
-                break;
-            case 2:
-                this.setState({ office2: false});
-                break;
-            case 3:
-                this.setState({ office3: false});
-                break;
-            case 4:
-                this.setState({ office4: false});
-                break;
-            default:
-                this.setState({ office1: this.state.office1});
-        }
+    endNumbers() {
+        this.setState({ endmodal: true});
     }
 
     showOfficeanswers() {
@@ -156,47 +197,90 @@ class App extends Component {
         this.setState({ officeanswer: true});
     }
 
-    handleNewUserMessage(msg) {
-        addResponseMessage('Thanks');
+    black() {
+        this.setState({ showMistake: false});
+        this.setState({ mistake: ""});
+        setTimeout(this.light, 3000);
+    }
+
+    light() {
+        this.setState({ showMistake: true});
+    }
+
+    endwriting() {
+        this.setState({ endmodal: true});
     }
 
     updateProgress(num) {
         switch (num) {
             case 0:
                 this.setState({ progress: this.state.progress + 1});
+                this.setState({ choosePercent: false});
+                setTimeout(this.showProgress, 5000);
                 break;
             case 25:
                 this.setState({ progress: this.state.progress + 2});
+                this.setState({ choosePercent: false});
+                setTimeout(this.showProgress, 5000);
                 break;
             case 50:
                 this.setState({ progress: this.state.progress + 3});
+                this.setState({ choosePercent: false});
+                setTimeout(this.showProgress, 5000);
                 break;
             case 75:
                 this.setState({ progress: this.state.progress + 4});
+                this.setState({ choosePercent: false});
+                setTimeout(this.showProgress, 5000);
                 break;
             case 100:
                 this.setState({ progress: this.state.progress + 5});
+                this.setState({ choosePercent: false});
+                setTimeout(this.showProgress, 5000);
                 break;
             default:
                 this.setState({ progress: this.state.progress});
         }
     }
 
+    showProgress() {
+        this.setState({ choosePercent: true});
+    }
+
+    remind() {
+        this.setState({ progress: this.state.progress + 1});
+    }
+
     updateMeet() {
-        switch (this.state.currentMeeting) {
-            case 1:
+        switch (this.state.currentMeeting%3) {
+            case 0:
                 this.setState({ meeting1: false});
                 this.setState({ meeting2: true});
+                this.setState({ meeting4: false});
+                setTimeout(this.showMeet, 200);
+                this.setState({ currentMeeting: this.state.currentMeeting + 1});
+                break;
+            case 1:
+                this.setState({ meeting2: false});
+                this.setState({ meeting3: true});
+                this.setState({ meeting4: false});
+                setTimeout(this.showMeet, 200);
                 this.setState({ currentMeeting: this.state.currentMeeting + 1});
                 break;
             case 2:
-                this.setState({ meeting2: false});
-                this.setState({ meeting3: true});
+                this.setState({ meeting3: false});
+                this.setState({ meeting1: true});
+                this.setState({ meeting4: false});
+                setTimeout(this.showMeet, 200);
                 this.setState({ currentMeeting: this.state.currentMeeting + 1});
                 break;
             default:
                 this.setState({ meeting3: this.state.meeting3});
         }
+    }
+
+    showMeet() {
+        this.setState({ meeting4: true});
     }
 
     render() {
@@ -207,6 +291,7 @@ class App extends Component {
                         <div className="title">
                             <h2> TalentBridger </h2>
                         </div>
+                        <h3 style={{position:'absolute', top:'-5px', right:'50px'}}> Nicholas Guan </h3>
                         <button onClick={() => this.next()}>
                             Start
                         </button>
@@ -218,12 +303,28 @@ class App extends Component {
                         <div className="title">
                             <h2> TalentBridger </h2>
                         </div>
+                        <h3 style={{position:'absolute', top:'-5px', right:'50px'}}> Nicholas Guan </h3>
+                        <Modal isOpen={this.state.startmodal} style={startmodal}>
+                            <div className="modal">
+                                <h3 style={{ opacity: '80%' }}> {this.state.starts[this.state.game - 1]} </h3>
+                                <button onClick={this.closeModal}>Got it!</button>
+                            </div>
+                        </Modal>
+                        <Modal isOpen={this.state.endmodal} style={endmodal}>
+                            <div className="modal2">
+                                <h3 style={{ opacity: '80%' }}> {this.state.ends[this.state.game - 1]} </h3>
+                                <div className="grid">
+                                    <button onClick={this.closeModal}>Retry</button>
+                                    <button onClick={this.next}>Next</button>
+                                </div>
+                            </div>
+                        </Modal>
                         <div style={{position:'relative'}}>
-                            <img src={this.state.officebs[this.state.currentOfficeb]} alt="office" className="backg" width="800" height="500"></img>
-                            {this.state.office1 ? <h3 style={{position:'absolute', top:'50px', left:'500px'}}> PM: Meeting is at 12pm. </h3> : null}
-                            {this.state.office2 ? <h3 style={{position:'absolute', top:'50px', left:'900px'}}> Manager: This report is due at 4pm today. </h3> : null}
-                            {this.state.office3 ? <h3 style={{position:'absolute', top:'300px', left:'500px'}}> Boss: This form is due at 2pm today. </h3> : null}
-                            {this.state.office4 ? <h3 style={{position:'absolute', top:'300px', left:'900px'}}> Bob: Good luck! </h3> : null}
+                            <div id={this.state.startmodal ? 'noanimate-area' : 'animate-area'}></div>
+                            {this.state.officeleft1 ? <h3 class="speechleft1" style={{top:'{this.state.officetops}', left:'{this.state.officelefts}'}}>{this.state.officespeeches[this.state.currentoffice]}</h3> : null}
+                            {this.state.officeleft2 ? <h3 class="speechleft2">{this.state.officespeeches[this.state.currentoffice]}</h3> : null}
+                            {this.state.officeright1 ? <h3 class="speechright1">{this.state.officespeeches[this.state.currentoffice]}</h3> : null}
+                            {this.state.officeright2 ? <h3 class="speechright2">{this.state.officespeeches[this.state.currentoffice]}</h3> : null}
                             {this.state.officeanswer ?
                                 <div>
                                     <h3 style={{position:'absolute', top:'160px', left:'625px'}}> What time did Boss want the form by? </h3>
@@ -246,9 +347,24 @@ class App extends Component {
                         <div className="title">
                             <h2> TalentBridger </h2>
                         </div>
+                        <h3 style={{position:'absolute', top:'-5px', right:'50px'}}> Nicholas Guan </h3>
+                        <Modal isOpen={this.state.startmodal} style={startmodal}>
+                            <div className="modal">
+                                <h3 style={{ opacity: '80%' }}> {this.state.starts[this.state.game - 1]} </h3>
+                                <button onClick={this.closeModal}>Got it!</button>
+                            </div>
+                        </Modal>
+                        <Modal isOpen={this.state.endmodal} style={endmodal}>
+                            <div className="modal2">
+                                <h3 style={{ opacity: '80%' }}> {this.state.ends[this.state.game - 1]} </h3>
+                                <div className="grid">
+                                    <button onClick={this.closeModal}>Retry</button>
+                                    <button onClick={this.next}>Next</button>
+                                </div>
+                            </div>
+                        </Modal>
                         <div style={{position:'relative'}}>
-                            <img src={numberss} alt="numberss" className="backg" width="800" height="500"></img>
-                            <span style={{position:'absolute', top:'180px', left:'750px', fontSize:'100px'}}>{this.state.numbers[this.state.currentNumber]}</span>
+                            <span style={{position:'absolute', top:'180px', left:'750px', fontSize:'100px'}} onClick={this.endNumbers}>{this.state.numbers[this.state.currentNumber]}</span>
                         </div>
                         <button onClick={() => this.next()}>
                             Next
@@ -261,21 +377,34 @@ class App extends Component {
                         <div className="title">
                             <h2> TalentBridger </h2>
                         </div>
+                        <h3 style={{position:'absolute', top:'-5px', right:'50px'}}> Nicholas Guan </h3>
+                        <Modal isOpen={this.state.startmodal} style={startmodal}>
+                            <div className="modal">
+                                <h3 style={{ opacity: '80%' }}> {this.state.starts[this.state.game - 1]} </h3>
+                                <button onClick={this.closeModal}>Got it!</button>
+                            </div>
+                        </Modal>
+                        <Modal isOpen={this.state.endmodal} style={endmodal}>
+                            <div className="modal2">
+                                <h3 style={{ opacity: '80%' }}> {this.state.ends[this.state.game - 1]} </h3>
+                                <div className="grid">
+                                    <button onClick={this.closeModal}>Retry</button>
+                                    <button onClick={this.next}>Next</button>
+                                </div>
+                            </div>
+                        </Modal>
                         <div style={{position:'relative'}}>
                             <img src={workspace} alt="workspace" width="800" height="500"></img>
-                            <textarea
-                                type="text"
-                                onChange={(e) => this.setState({ mistake: e.target.value })}
-                                onPaste={(e) => e.preventDefault()}
-                                value={this.state.mistake}
-                                style={{position:'absolute', top:'80px', left:'640px', width:'250px', height:'130px'}}
-                            />
-                            <Widget
-                                handleNewUserMessage={this.handleNewUserMessage}
-                                profileAvatar='null'
-                                title="Manager"
-                                subtitle=""
-                            />
+                            {this.state.showMistake ?
+                                <textarea
+                                    type="text"
+                                    onChange={(e) => this.setState({ mistake: e.target.value })}
+                                    onPaste={(e) => e.preventDefault()}
+                                    value={this.state.mistake}
+                                    style={{position:'absolute', top:'157px', left:'685px', minWidth:'150px', minHeight:'99px'}}
+                                /> :
+                                <div style={{backgroundColor:'black', color:'white', position:'absolute', top:'157px', left:'689px', width:'156px', height:'105px'}}> Computer Restarted</div>
+                            }
                         </div>
                         <button onClick={() => this.next()}>
                             Next
@@ -288,18 +417,54 @@ class App extends Component {
                         <div className="title">
                             <h2> TalentBridger </h2>
                         </div>
+                        <h3 style={{position:'absolute', top:'-5px', right:'50px'}}> Nicholas Guan </h3>
+                        <Modal isOpen={this.state.startmodal} style={startmodal}>
+                            <div className="modal">
+                                <h3 style={{ opacity: '80%' }}> {this.state.starts[this.state.game - 1]} </h3>
+                                <button onClick={this.closeModal}>Got it!</button>
+                            </div>
+                        </Modal>
+                        <Modal isOpen={this.state.endmodal} style={endmodal}>
+                            <div className="modal2">
+                                <h3 style={{ opacity: '80%' }}> {this.state.ends[this.state.game - 1]} </h3>
+                                <div className="grid">
+                                    <button onClick={this.closeModal}>Retry</button>
+                                    <button onClick={this.next}>Next</button>
+                                </div>
+                            </div>
+                        </Modal>
                         <div style={{position:'relative'}}>
                             <img src={group} alt="group" width="800" height="500"></img>
-                            <span style={{position:'absolute', top:'250px', left:'780px'}}>{this.state.progress}%</span>
+                            <span style={{position:'absolute', top:'240px', left:'766px', width:'60px', transform:'rotate(14deg)'}}>{this.state.progress}% complete</span>
+                            <div style={{top:'282px', left:'756px', height:'8px', width:'70px', position:'absolute', background:'lightgrey', borderRadius:'25px', transform:'rotate(14deg)'}}>
+                                <div style={{height:'8px', width:this.state.progress/100*70, background:'orange', borderRadius:'25px'}}></div>
+                            </div>
+                            {this.state.choosePercent ? null :
+                                <div style={{position:'absolute', left:'610px', top:'290px'}}>
+                                    <ClockLoader
+                                        size={'40px'}
+                                        color={'red'}
+                                        loading={true}
+                                    />
+                                </div>
+                            }
                             {this.state.choosePercent ?
                                 <div>
-                                    <button onClick={() => this.updateProgress(0)}>0%</button>
-                                    <button onClick={() => this.updateProgress(25)}>25%</button>
-                                    <button onClick={() => this.updateProgress(50)}>50%</button>
-                                    <button onClick={() => this.updateProgress(75)}>75%</button>
-                                    <button onClick={() => this.updateProgress(100)}>100%</button>
+                                    <button style={{position:'absolute', width:"50px", height:"50px", top:'415px', left:'755px', width:'60px', borderRadius:'30%', background:'gold', border:'none'}} onClick={() => this.updateProgress(0)}>0%</button>
+                                    <button style={{position:'absolute', width:"50px", height:"50px", top:'365px', left:'880px', width:'60px', borderRadius:'30%', background:'gold', border:'none'}} onClick={() => this.updateProgress(25)}>25%</button>
+                                    <button style={{position:'absolute', width:"50px", height:"50px", top:'250px', left:'880px', width:'60px', borderRadius:'30%', background:'gold', border:'none'}} onClick={() => this.updateProgress(50)}>50%</button>
+                                    <button style={{position:'absolute', width:"50px", height:"50px", top:'290px', left:'980px', width:'60px', borderRadius:'30%', background:'gold', border:'none'}} onClick={() => this.updateProgress(75)}>75%</button>
+                                    <button style={{position:'absolute', width:"50px", height:"50px", top:'150px', left:'780px', width:'60px', borderRadius:'30%', background:'gold', border:'none'}} onClick={() => this.updateProgress(100)}>100%</button>
+                                    <button style={{position:'absolute', width:"50px", height:"50px", top:'350px', left:'615px', width:'60px', borderRadius:'30%', background:'gold', border:'none'}} onClick={() => this.remind()}>Remind</button>
+                                </div> :
+                                <div>
+                                    <button style={{position:'absolute', width:"50px", height:"50px", top:'415px', left:'755px', width:'60px', borderRadius:'30%', background:'khaki', border:'none'}}>0%</button>
+                                    <button style={{position:'absolute', width:"50px", height:"50px", top:'365px', left:'880px', width:'60px', borderRadius:'30%', background:'khaki', border:'none'}}>25%</button>
+                                    <button style={{position:'absolute', width:"50px", height:"50px", top:'250px', left:'880px', width:'60px', borderRadius:'30%', background:'khaki', border:'none'}}>50%</button>
+                                    <button style={{position:'absolute', width:"50px", height:"50px", top:'290px', left:'980px', width:'60px', borderRadius:'30%', background:'khaki', border:'none'}}>75%</button>
+                                    <button style={{position:'absolute', width:"50px", height:"50px", top:'150px', left:'780px', width:'60px', borderRadius:'30%', background:'khaki', border:'none'}}>100%</button>
+                                    <button style={{position:'absolute', width:"50px", height:"50px", top:'350px', left:'615px', width:'60px', borderRadius:'30%', background:'gold', border:'none'}} onClick={() => this.remind()}>Remind</button>
                                 </div>
-                                : null
                             }
                         </div>
                         <button onClick={() => this.next()}>
@@ -313,15 +478,34 @@ class App extends Component {
                         <div className="title">
                             <h2> TalentBridger </h2>
                         </div>
+                        <h3 style={{position:'absolute', top:'-5px', right:'50px'}}> Nicholas Guan </h3>
+                        <Modal isOpen={this.state.startmodal} style={startmodal}>
+                            <div className="modal">
+                                <h3 style={{ opacity: '80%' }}> {this.state.starts[this.state.game - 1]} </h3>
+                                <button onClick={this.closeModal}>Got it!</button>
+                            </div>
+                        </Modal>
+                        <Modal isOpen={this.state.endmodal} style={endmodal}>
+                            <div className="modal2">
+                                <h3 style={{ opacity: '80%' }}> {this.state.ends[this.state.game - 1]} </h3>
+                                <div className="grid">
+                                    <button onClick={this.closeModal}>Retry</button>
+                                    <button onClick={this.next}>Next</button>
+                                </div>
+                            </div>
+                        </Modal>
                         <div style={{position:'relative'}}>
                             <img src={meeting} alt="meeting" width="800" height="500"></img>
-                            {this.state.meeting1 ? <div><img src={speech1} alt="speech1" width="200" style={{position:'absolute', top:'50px', left:'560px'}}></img><h3 style={{position:'absolute', top:'50px', left:'560px'}}>Did you finish the project?</h3></div> : null}
-                            {this.state.meeting2 ? <div><img src={speech1} alt="speech1" width="200" style={{position:'absolute', top:'50px', left:'830px'}}></img><h3 style={{position:'absolute', top:'50px', left:'830px'}}>Did you complete you goals for the week?</h3></div> : null}
-                            {this.state.meeting3 ? <div><img src={speech2} alt="speech2" width="200" height="100" style={{position:'absolute', top:'120px', left:'860px'}}></img><h3 style={{position:'absolute', top:'120px', left:'860px'}}>Who do you think works the hardest in the office?</h3></div> : null}
-                            <button onClick={() => this.updateMeet()}>Yes</button>
-                            <button onClick={() => this.updateMeet()}>No</button>
-                            <button onClick={() => this.updateMeet()}>John</button>
-                            <button onClick={() => this.updateMeet()}>Great</button>
+                            {this.state.meeting1 ? <div><h3 style={{position:'absolute', top:'85px', left:'550px', width:'80px'}}>{this.state.meetingQuestions[this.state.currentMeeting]}</h3></div> : null}
+                            {this.state.meeting2 ? <div><h3 style={{position:'absolute', top:'95px', left:'735px', width:'80px'}}>{this.state.meetingQuestions[this.state.currentMeeting]}</h3></div> : null}
+                            {this.state.meeting3 ? <div><h3 style={{position:'absolute', top:'15px', left:'875px', width:'80px'}}>{this.state.meetingQuestions[this.state.currentMeeting]}</h3></div> : null}
+                            {this.state.meeting1 ? null : <div style={{position:'absolute', width:'110px', height:'110px', backgroundColor:'white', top:'85px', left:'536px'}}> </div>}
+                            {this.state.meeting2 ? null : <div style={{position:'absolute', width:'95px', height:'92px', backgroundColor:'white', top:'100px', left:'731px'}}> </div>}
+                            {this.state.meeting3 ? null : <div style={{position:'absolute', width:'110px', height:'110px', backgroundColor:'white', top:'25px', left:'859px'}}> </div>}
+                            {this.state.meeting4 ? <button style={{position:'absolute', top:'415px', left:'500px', height: '40px', width:'250px', borderRadius:'20px', backgroundColor:'thistle', border:'1.5px hidden purple'}} onClick={() => this.updateMeet()}>{this.state.meetingAnswers[this.state.currentMeeting][0]}</button> : null}
+                            {this.state.meeting4 ? <button style={{position:'absolute', top:'365px', left:'790px', height: '40px', width:'250px', borderRadius:'20px', backgroundColor:'thistle', border:'1.5px hidden purple'}} onClick={() => this.updateMeet()}>{this.state.meetingAnswers[this.state.currentMeeting][1]}</button> : null}
+                            {this.state.meeting4 ? <button style={{position:'absolute', top:'365px', left:'500px', height: '40px', width:'250px', borderRadius:'20px', backgroundColor:'thistle', border:'1.5px hidden purple'}} onClick={() => this.updateMeet()}>{this.state.meetingAnswers[this.state.currentMeeting][2]}</button> : null}
+                            {this.state.meeting4 ? <button style={{position:'absolute', top:'415px', left:'790px', height: '40px', width:'250px', borderRadius:'20px', backgroundColor:'thistle', border:'1.5px hidden purple'}} onClick={() => this.updateMeet()}>{this.state.meetingAnswers[this.state.currentMeeting][3]}</button> : null}
                         </div>
                         <button onClick={() => this.next()}>
                             Start3
