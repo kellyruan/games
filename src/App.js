@@ -336,9 +336,6 @@ class App extends Component {
                                 : null
                             }
                         </div>
-                        <button onClick={() => this.next()}>
-                            Next
-                        </button>
                     </div>
                 );
             case 2:
@@ -366,9 +363,6 @@ class App extends Component {
                         <div style={{position:'relative'}}>
                             <span style={{position:'absolute', top:'180px', left:'750px', fontSize:'100px'}} onClick={this.endNumbers}>{this.state.numbers[this.state.currentNumber]}</span>
                         </div>
-                        <button onClick={() => this.next()}>
-                            Next
-                        </button>
                     </div>
                 );
             case 3:
@@ -406,9 +400,6 @@ class App extends Component {
                                 <div style={{backgroundColor:'black', color:'white', position:'absolute', top:'157px', left:'689px', width:'156px', height:'105px'}}> Computer Restarted</div>
                             }
                         </div>
-                        <button onClick={() => this.next()}>
-                            Next
-                        </button>
                     </div>
                 );
             case 4:
@@ -467,9 +458,6 @@ class App extends Component {
                                 </div>
                             }
                         </div>
-                        <button onClick={() => this.next()}>
-                            Next
-                        </button>
                     </div>
                 );
             case 5:
@@ -507,9 +495,6 @@ class App extends Component {
                             {this.state.meeting4 ? <button style={{position:'absolute', top:'365px', left:'500px', height: '40px', width:'250px', borderRadius:'20px', backgroundColor:'thistle', border:'1.5px hidden purple'}} onClick={() => this.updateMeet()}>{this.state.meetingAnswers[this.state.currentMeeting][2]}</button> : null}
                             {this.state.meeting4 ? <button style={{position:'absolute', top:'415px', left:'790px', height: '40px', width:'250px', borderRadius:'20px', backgroundColor:'thistle', border:'1.5px hidden purple'}} onClick={() => this.updateMeet()}>{this.state.meetingAnswers[this.state.currentMeeting][3]}</button> : null}
                         </div>
-                        <button onClick={() => this.next()}>
-                            Start3
-                        </button>
                     </div>
                 );
             default:
