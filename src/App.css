@@ -20,7 +20,7 @@ h2 {
 }
 
 @keyframes animatedBackground {
-	from { background-position: 0 0; }
+	from { background-position: 0% 0%; }
 	to { background-position: 100000% 0; }
 }
 
@@ -28,23 +28,23 @@ h2 {
 	width: 800px;
 	height: 500px;
 	background-image: url(office.jpeg);
-	background-position: 0px 0px;
+	background-position: 0% 0%;
     background-size: 750px 500px;
 	background-repeat: repeat-x;
 	animation: animatedBackground 1000s linear infinite;
     margin-top: 0px;
-    margin-left: 365px;
+    margin-left: 24%;
 }
 
 #noanimate-area	{
 	width: 800px;
 	height: 500px;
 	background-image: url(office.jpeg);
-	background-position: 0px 0px;
+	background-position: 0% 0%;
     background-size: 750px 500px;
 	background-repeat: repeat-x;
     margin-top: 0px;
-    margin-left: 365px;
+    margin-left: 24%;
 }
 
 h3.speechleft1 {
