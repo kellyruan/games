@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/games/static/css/main.df4fb218.chunk.css",
-    "main.js": "/games/static/js/main.df138d2c.chunk.js",
-    "main.js.map": "/games/static/js/main.df138d2c.chunk.js.map",
+    "main.css": "/games/static/css/main.e6e846fb.chunk.css",
+    "main.js": "/games/static/js/main.99cbc0f2.chunk.js",
+    "main.js.map": "/games/static/js/main.99cbc0f2.chunk.js.map",
     "runtime-main.js": "/games/static/js/runtime-main.0d2fd491.js",
     "runtime-main.js.map": "/games/static/js/runtime-main.0d2fd491.js.map",
     "static/js/2.917fb346.chunk.js": "/games/static/js/2.917fb346.chunk.js",
     "static/js/2.917fb346.chunk.js.map": "/games/static/js/2.917fb346.chunk.js.map",
     "index.html": "/games/index.html",
-    "precache-manifest.c89633137bd932efd0654bee3b90115a.js": "/games/precache-manifest.c89633137bd932efd0654bee3b90115a.js",
+    "precache-manifest.9221510b450eeacc3a54f301e9f40940.js": "/games/precache-manifest.9221510b450eeacc3a54f301e9f40940.js",
     "service-worker.js": "/games/service-worker.js",
-    "static/css/main.df4fb218.chunk.css.map": "/games/static/css/main.df4fb218.chunk.css.map",
+    "static/css/main.e6e846fb.chunk.css.map": "/games/static/css/main.e6e846fb.chunk.css.map",
     "static/js/2.917fb346.chunk.js.LICENSE.txt": "/games/static/js/2.917fb346.chunk.js.LICENSE.txt",
     "static/media/group.jpg": "/games/static/media/group.5d3863be.jpg",
     "static/media/meeting.png": "/games/static/media/meeting.525737a5.png",
@@ -20,7 +20,7 @@
   "entrypoints": [
     "static/js/runtime-main.0d2fd491.js",
     "static/js/2.917fb346.chunk.js",
-    "static/css/main.df4fb218.chunk.css",
-    "static/js/main.df138d2c.chunk.js"
+    "static/css/main.e6e846fb.chunk.css",
+    "static/js/main.99cbc0f2.chunk.js"
   ]
 }
